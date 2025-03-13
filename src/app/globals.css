@@ -93,7 +93,7 @@ a {
 .sidebar-content {
   flex: 1;
   overflow-y: auto;
-  padding: 24px 0;
+  padding: 0;
   margin-top: 8px;
   display: flex;
   flex-direction: column;
@@ -104,7 +104,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 12px;
+  padding-top: 0px;
   width: 100%;
   padding-left: 0;
   padding-right: 0;
@@ -150,22 +150,7 @@ a {
   opacity: 1;
 }
 
-.sidebar-menu-item.active::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 12px;
-  bottom: 12px;
-  width: 3px;
-  background-color: var(--gray-900);
-  border-radius: 0 2px 2px 0;
-  z-index: 2;
-  margin-left: 0;
-  transform: translateX(0);
-}
-
 .sidebar-menu-item:hover {
-  background-color: var(--gray-50);
   color: var(--primary-purple);
 }
 
@@ -546,7 +531,7 @@ a {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 24px;
-  padding: 24px;
+  padding: 8 24px;
 }
 
 /* Creator card styles */
@@ -799,6 +784,8 @@ a {
   position: relative;
   background-color: #fff;
   flex-shrink: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(220, 220, 220, 0.6) transparent;
 }
 
 .profile-drawer-sidebar-column {
@@ -962,7 +949,7 @@ a {
   gap: 24px;
   margin-bottom: 8x;
   margin-top: 8px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: px solid #f0f0f0;
   padding-bottom: 0;
 }
 
@@ -1027,6 +1014,12 @@ a {
   border: 1px solid #e0e0e0;
   overflow: hidden;
   margin-bottom: 0;
+  margin-top: 8px;
+  transition: box-shadow 0.3s ease;
+}
+
+.social-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
 }
 
 .social-tables-container {
@@ -1303,7 +1296,7 @@ USAGE EXAMPLE:
 .contact-value {
   font-size: 14px;
   color: #111827;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .contact-phone-value {
@@ -1417,6 +1410,11 @@ USAGE EXAMPLE:
   border-radius: 8px;
   overflow: hidden;
   margin-top: 0px;
+  transition: box-shadow 0.3s ease;
+}
+
+.data-table:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
 }
 
 .data-table-inner {
@@ -1445,7 +1443,7 @@ USAGE EXAMPLE:
 
 .attributes-table-header {
   display: grid;
-  grid-template-columns: 1fr 100px 1fr;
+  grid-template-columns: 1fr 1fr;
   background-color: #fafafa;
   border-bottom: 1px solid #e8e8e8;
   font-weight: 500;
@@ -1454,14 +1452,19 @@ USAGE EXAMPLE:
 }
 
 /* Align the third column header (Value) to the right */
-.attributes-table-header > .attributes-table-cell:nth-child(3) {
+.attributes-table-header > .attributes-table-cell:nth-child(2) {
   text-align: right;
 }
 
 .attributes-table-row {
   display: grid;
-  grid-template-columns: 1fr 100px 1fr;
+  grid-template-columns: 1fr 1fr;
   border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+
+.attributes-table-row:hover {
+  background-color: #fafafa;
 }
 
 .attributes-table-row:last-child {
@@ -1474,7 +1477,7 @@ USAGE EXAMPLE:
 }
 
 /* Align the third column (values) to the right */
-.attributes-table-row > .attributes-table-cell:nth-child(3) {
+.attributes-table-row > .attributes-table-cell:nth-child(2) {
   text-align: right;
   display: flex;
   flex-direction: column;
@@ -1482,7 +1485,7 @@ USAGE EXAMPLE:
 }
 
 /* Override flex display for attribute tags container */
-.attributes-table-row > .attributes-table-cell:nth-child(3) .attribute-tags {
+.attributes-table-row > .attributes-table-cell:nth-child(2) .attribute-tags {
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -1503,26 +1506,10 @@ USAGE EXAMPLE:
 }
 
 .attribute-type {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.type-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  background-color: #f5f5f5;
-  border-radius: 4px;
-  font-size: 10px;
+  margin-left: -4px;
+  font-size: 12px;
   color: #8c8c8c;
-}
-
-.type-text {
-  font-size: 13px;
-  color: #8c8c8c;
+  white-space: nowrap;
 }
 
 .attribute-tags {
@@ -1542,10 +1529,16 @@ USAGE EXAMPLE:
 
 /* Social Performance */
 .social-card {
-  border: 1px solid #eee;
-  border-radius: 8px;
+  background-color: #fff;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
   overflow: hidden;
   margin-bottom: 0;
+  transition: box-shadow 0.3s ease;
+}
+
+.social-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
 }
 
 .social-filters {
@@ -1666,9 +1659,9 @@ USAGE EXAMPLE:
 
 .content-card {
   width: 100%;
-  padding: 24px;
+  padding: 16px;
   border: 1px solid #e8e8e8;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 .content-samples-grid {
@@ -1929,15 +1922,26 @@ USAGE EXAMPLE:
 
 .attribute-list {
   border: 1px solid #e8e8e8;
-  border-radius: 6px;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.attribute-list:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
 }
 
 .attribute-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: 12px 12px;
   border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+
+.attribute-item:hover {
+  background-color: #fafafa;
 }
 
 .attribute-item:last-child {
@@ -1949,18 +1953,39 @@ USAGE EXAMPLE:
   align-items: center;
   gap: 8px;
   font-size: 14px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .attribute-item-label-container {
   display: flex;
   align-items: center;
-  gap: 4px;
+  white-space: nowrap;
+  min-width: 0;
+  font-weight: 400;
+  color: #262626;
+  position: relative;
 }
 
 .attribute-item-type {
-  color: #8c8c8c;
+  display: none;
+  position: absolute;
+  top: -24px;
+  left: 0;
+  background-color: #f5f5f5;
+  padding: 2px 8px;
+  border-radius: 4px;
   font-size: 12px;
-  margin-left: 4px;
+  color: #8c8c8c;
+  font-weight: normal;
+  white-space: nowrap;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.attribute-item-label-container:hover .attribute-item-type {
+  display: block;
 }
 
 .attribute-item-icon {
@@ -1970,26 +1995,35 @@ USAGE EXAMPLE:
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .attribute-item-value {
   text-align: right;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-left: 12px;
 }
 
 .attribute-value-content {
   font-size: 14px;
   color: #262626;
   font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.attribute-tags {
+.attribute-item-value .attribute-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
   justify-content: flex-end;
 }
 
-.attribute-tag {
+.attribute-item-value .attribute-tag {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1998,15 +2032,17 @@ USAGE EXAMPLE:
   border-radius: 4px;
   font-size: 12px;
   color: #262626;
+  white-space: nowrap;
 }
 
-.attribute-entries {
+.attribute-item-value .attribute-entries {
   color: #8c8c8c;
   font-size: 12px;
-  margin-left: 8px;
+  margin-left: 4px;
   background-color: #f5f5f5;
   padding: 2px 8px;
   border-radius: 4px;
+  white-space: nowrap;
 }
 
 /* Messages Tab */
@@ -2020,7 +2056,7 @@ USAGE EXAMPLE:
   font-size: 12px;
   color: #8c8c8c;
   margin-bottom: 8px;
-  text-align: center;
+  text-align: left;
 }
 
 .message-item {
@@ -2215,6 +2251,26 @@ USAGE EXAMPLE:
 .sidebar-action-button img {
   width: 16px;
   height: 16px;
+}
+
+/* Profile Drawer Main Column - Custom scrollbar that only appears on scroll */
+.profile-drawer-main-column::-webkit-scrollbar {
+  width: 6px;
+  background-color: transparent;
+}
+
+.profile-drawer-main-column::-webkit-scrollbar-thumb {
+  background-color: rgba(220, 220, 220, 0);
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
+}
+
+.profile-drawer-main-column:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(220, 220, 220, 0.6);
+}
+
+.profile-drawer-main-column:hover::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(200, 200, 200, 0.8);
 }
 
 /* End of file */ 
