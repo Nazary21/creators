@@ -13,12 +13,38 @@ export default function Home() {
   const [filteredCreators, setFilteredCreators] = useState(creators);
   const [isCardsView, setIsCardsView] = useState(true);
   const [savedCreators, setSavedCreators] = useState<string[]>([]);
+  const [activeCreatorId, setActiveCreatorId] = useState<string | null>(null);
 
   useEffect(() => {
     // Update filtered creators when search query changes
     const results = searchCreators(searchQuery);
     setFilteredCreators(results);
   }, [searchQuery]);
+
+  // Set up event listener for creator drawer navigation
+  useEffect(() => {
+    const handleOpenProfileDrawer = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      if (customEvent.detail && customEvent.detail.creatorId) {
+        setActiveCreatorId(customEvent.detail.creatorId);
+        
+        // Find the creator element and trigger click
+        setTimeout(() => {
+          const creatorElement = document.querySelector(`[data-creator-id="${customEvent.detail.creatorId}"]`);
+          if (creatorElement) {
+            // For normal opening, click on the element
+            (creatorElement as HTMLElement).click();
+          }
+        }, 10);
+      }
+    };
+
+    document.addEventListener('openProfileDrawer', handleOpenProfileDrawer);
+    
+    return () => {
+      document.removeEventListener('openProfileDrawer', handleOpenProfileDrawer);
+    };
+  }, []);
 
   const handleSearch = (value: string) => {
     setSearchQuery(value);
@@ -86,12 +112,15 @@ export default function Home() {
 
         {/* Results grid */}
         <div className="creators-grid">
-          {filteredCreators.map((creator) => (
-            <CreatorCard 
-              key={creator.id} 
-              creator={creator} 
-              onSaveCreator={handleSaveCreator}
-            />
+          {filteredCreators.map((creator, index) => (
+            <div key={creator.id} data-creator-id={creator.id}>
+              <CreatorCard 
+                creator={creator} 
+                onSaveCreator={handleSaveCreator}
+                allCreators={filteredCreators}
+                index={index}
+              />
+            </div>
           ))}
         </div>
       </div>

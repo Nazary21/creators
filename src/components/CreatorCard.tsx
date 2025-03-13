@@ -6,10 +6,21 @@ import ProfileDrawer from './ProfileDrawer';
 interface CreatorCardProps {
   creator: Creator;
   onSaveCreator?: (id: string) => void;
+  allCreators?: Creator[]; // Array of all creators for navigation
+  index?: number; // Current index in the creators array
 }
 
-const CreatorCard: React.FC<CreatorCardProps> = ({ creator, onSaveCreator }) => {
+const CreatorCard: React.FC<CreatorCardProps> = ({ 
+  creator, 
+  onSaveCreator,
+  allCreators = [],
+  index = 0 
+}) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  // Add state to track the currently displayed creator
+  const [currentCreator, setCurrentCreator] = useState<Creator>(creator);
+  // Track the current index separately so it updates as we navigate
+  const [currentIndex, setCurrentIndex] = useState<number>(index);
 
   // Function to get a content image path for a creator
   const getContentImagePath = (creatorId: string, index: number) => {
@@ -40,6 +51,8 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ creator, onSaveCreator }) => 
 
   const handleCardClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    setCurrentCreator(creator); // Reset to the original creator when opening
+    setCurrentIndex(index); // Reset to the original index
     setIsDrawerOpen(true);
   };
 
@@ -51,6 +64,35 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ creator, onSaveCreator }) => 
     if (onSaveCreator) {
       onSaveCreator(id);
     }
+  };
+
+  // Navigation handlers
+  const handlePrevious = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent event bubbling
+    
+    if (allCreators.length <= 1) return;
+    
+    // Calculate the previous index based on the current index (not the original index)
+    const prevIndex = currentIndex <= 0 ? allCreators.length - 1 : currentIndex - 1;
+    const prevCreator = allCreators[prevIndex];
+    
+    // Update both the creator and the index
+    setCurrentCreator(prevCreator);
+    setCurrentIndex(prevIndex);
+  };
+
+  const handleNext = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent event bubbling
+    
+    if (allCreators.length <= 1) return;
+    
+    // Calculate the next index based on the current index (not the original index)
+    const nextIndex = (currentIndex + 1) % allCreators.length;
+    const nextCreator = allCreators[nextIndex];
+    
+    // Update both the creator and the index
+    setCurrentCreator(nextCreator);
+    setCurrentIndex(nextIndex);
   };
 
   return (
@@ -140,10 +182,12 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ creator, onSaveCreator }) => 
       {/* Profile Drawer */}
       {isDrawerOpen && (
         <ProfileDrawer 
-          creator={creator} 
+          creator={currentCreator} // Use the current creator state instead of the prop
           isOpen={isDrawerOpen} 
           onClose={handleDrawerClose}
           onSave={handleSaveCreator}
+          onNext={allCreators.length > 1 ? (e) => handleNext(e) : undefined}
+          onPrevious={allCreators.length > 1 ? (e) => handlePrevious(e) : undefined}
         />
       )}
     </>
