@@ -623,21 +623,128 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
         return (
           <div className="sidebar-overview">
             <div className="overview-campaigns">
-              <h4>Campaigns</h4>
-              <div className="campaign-list">
-                <div className="campaign-item">
-                  <div className="campaign-icon">📊</div>
-                  <div className="campaign-details">
-                    <div className="campaign-name">Campaign Name</div>
-                    <div className="campaign-status">Draft</div>
-                  </div>
-                  <button className="campaign-action">•••</button>
+              <div className="attributes-header">
+                <h4>Campaigns</h4>
+                <div className="sidebar-header-actions">
+                  <button className="attribute-action-button">
+                    <PlusOutlined style={{ fontSize: '14px' }} />
+                  </button>
                 </div>
               </div>
-              <button className="add-campaign-button">
-                <span className="button-icon">+</span>
-                Add to campaign
-              </button>
+              
+              <div className="campaign-list">
+                <div className="campaign-item">
+                  <div className="campaign-icon">
+                    <img src="/images/icons/pajamas_project.svg" alt="Campaign" />
+                  </div>
+                  <div className="campaign-details">
+                    <div className="campaign-name">California Skaters</div>
+                    <div className="campaign-status">
+                      <span className="campaign-status-badge">In progress</span>
+                    </div>
+                  </div>
+                  <button className="campaign-action">
+                    <RightOutlined style={{ fontSize: '12px' }} />
+                  </button>
+                </div>
+                
+                <div className="campaign-item">
+                  <div className="campaign-icon">
+                    <img src="/images/icons/pajamas_project.svg" alt="Campaign" />
+                  </div>
+                  <div className="campaign-details">
+                    <div className="campaign-name">New York Skaters</div>
+                    <div className="campaign-status">
+                      <span className="campaign-status-badge on-hold">On hold</span>
+                    </div>
+                  </div>
+                  <button className="campaign-action">
+                    <RightOutlined style={{ fontSize: '12px' }} />
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div className="my-attributes">
+              <div className="attributes-header">
+                <h4>My attributes</h4>
+                <div className="sidebar-header-actions">
+                  <button className="attribute-action-button">
+                    <PlusOutlined style={{ fontSize: '14px' }} />
+                  </button>
+                </div>
+              </div>
+              
+              <div className="attribute-list">
+                <div className="attribute-item">
+                  <div className="attribute-item-label">
+                    <div className="attribute-item-icon">
+                      <EnvironmentOutlined />
+                    </div>
+                    <div className="attribute-item-label-container">
+                      Gift address
+                      <span className="attribute-item-type">String</span>
+                    </div>
+                  </div>
+                  <div className="attribute-item-value">
+                    <div className="attribute-value-content">13th Street, 47 W 13th St, New York</div>
+                  </div>
+                </div>
+                
+                <div className="attribute-item">
+                  <div className="attribute-item-label">
+                    <div className="attribute-item-icon">
+                      <span style={{ fontSize: '18px' }}>{ '{' }</span>
+                    </div>
+                    <div className="attribute-item-label-container">
+                      Content Style
+                      <span className="attribute-item-type">Collection</span>
+                    </div>
+                  </div>
+                  <div className="attribute-item-value">
+                    <div className="attribute-value-content">
+                      <span className="attribute-tag">Educational</span>
+                      <span className="attribute-entries">+4 entries</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="attribute-item">
+                  <div className="attribute-item-label">
+                    <div className="attribute-item-icon">
+                      Σ
+                    </div>
+                    <div className="attribute-item-label-container">
+                      Total followers
+                      <span className="attribute-item-type">Formula</span>
+                    </div>
+                  </div>
+                  <div className="attribute-item-value">
+                    <div className="attribute-value-content">221.7k</div>
+                  </div>
+                </div>
+                
+                <div className="attribute-item">
+                  <div className="attribute-item-label">
+                    <div className="attribute-item-icon">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12.87 15.07L10.33 12.56L10.36 12.53C12.1 10.59 13.34 8.36 14.07 6H17V4H10V2H8V4H1V6H12.17C11.5 7.92 10.44 9.75 9 11.35C8.07 10.32 7.3 9.19 6.69 8H4.69C5.42 9.63 6.42 11.17 7.67 12.56L2.58 17.58L4 19L9 14L12.11 17.11L12.87 15.07ZM18.5 10H16.5L12 22H14L15.12 19H19.87L21 22H23L18.5 10ZM15.88 17L17.5 12.67L19.12 17H15.88Z" fill="currentColor"/>
+                      </svg>
+                    </div>
+                    <div className="attribute-item-label-container">
+                      Languages Spoken
+                      <span className="attribute-item-type">Collection</span>
+                    </div>
+                  </div>
+                  <div className="attribute-item-value">
+                    <div className="attribute-tags">
+                      <span className="attribute-tag">Chinese</span>
+                      <span className="attribute-tag">Spanish</span>
+                      <span className="attribute-tag">English</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         );
