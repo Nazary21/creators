@@ -42,23 +42,6 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ labels }) => {
             <span className="filter-section-title">VIEWS</span>
             <PlusOutlined className="filter-section-icon" />
           </div>
-          <div className="filter-view-item">
-            <div className="filter-view-icon">
-              <RightOutlined />
-            </div>
-            <div className="filter-view-content">
-              <span>Views</span>
-            </div>
-            <div className="filter-view-action">
-              <PlusOutlined />
-            </div>
-          </div>
-          <div className="add-view-wrapper">
-            <button className="add-view-btn">
-              <PlusOutlined />
-              <span>Add view</span>
-            </button>
-          </div>
         </div>
 
         {/* Labels section */}

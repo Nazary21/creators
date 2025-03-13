@@ -83,6 +83,21 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     }
   }, [creator.isSaved]);
   
+  // Disable body scrolling when drawer is open
+  useEffect(() => {
+    if (isOpen) {
+      // Save current overflow value
+      const originalOverflow = document.body.style.overflow;
+      // Disable scrolling on body
+      document.body.style.overflow = 'hidden';
+      
+      // Re-enable scrolling on cleanup
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
+  
   // Add keyboard navigation support
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -141,18 +156,20 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
           <div className="profile-status-pill">
             <div className="profile-status-icon">
               <img 
-                src={drawerState === 'saved' ? "/images/icons/progress-manual-cf.svg" : "/images/icons/open-to-cooperation.svg"} 
+                src={drawerState === 'saved' ? "/images/icons/progress-manual-cf.svg" : "/images/icons/progress-manual-cf.svg"} 
                 alt="status"
                 style={{
-                  width: '14px',
-                  height: '14px',
+                  width: '16x',
+                  height: '16px',
                   filter: drawerState === 'saved' 
-                    ? "brightness(0) saturate(100%) invert(28%) sepia(94%) saturate(1539%) hue-rotate(197deg) brightness(97%) contrast(93%)" 
-                    : "brightness(0) saturate(100%) invert(35%) sepia(0%) saturate(0%) hue-rotate(167deg) brightness(96%) contrast(87%)"
+                    ? "brightness(0) saturate(100%) invert(23%) sepia(97%) saturate(3769%) hue-rotate(218deg) brightness(95%) contrast(91%)" 
+                    : "brightness(0) saturate(100%) invert(46%) sepia(16%) saturate(255%) hue-rotate(174deg) brightness(90%) contrast(87%)"
                 }}
               />
             </div>
-            <span className="profile-status-text">{drawerState === 'saved' ? "In progress" : "Open to cooperation"}</span>
+            <span className={`profile-status-text ${drawerState === 'saved' ? "in-progress" : ""}`}>
+              {drawerState === 'saved' ? "In progress" : "Open to cooperation"}
+            </span>
           </div>
         </div>
       </div>
@@ -190,44 +207,48 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     <div className="profile-drawer-contact">
       <div className="contact-grid">
         <div className="contact-item">
-          <MailOutlined className="contact-icon" />
-          <div className="contact-content">
-            <div className="contact-label">Email</div>
-            <div className="contact-value">{creator.email}</div>
+          <div className="contact-label">
+            <MailOutlined className="contact-icon" />
+            Email
+          </div>
+          <div className="contact-value">{creator.email}</div>
+        </div>
+        
+        <div className="contact-item">
+          <div className="contact-label">
+            <EnvironmentOutlined className="contact-icon" />
+            Location
+          </div>
+          <div className="contact-value">{creator.location}</div>
+        </div>
+        
+        <div className="contact-item">
+          <div className="contact-label">
+            <PhoneOutlined className="contact-icon" />
+            Phone
+          </div>
+          <div className="contact-value">
+            {creator.phone} 
+            <span className="contact-tag" style={{ marginLeft: '8px', fontSize: '12px' }}>+3</span>
           </div>
         </div>
         
         <div className="contact-item">
-          <EnvironmentOutlined className="contact-icon" />
-          <div className="contact-content">
-            <div className="contact-label">Location</div>
-            <div className="contact-value truncate">{creator.location}</div>
+          <div className="contact-label">
+            <img src="/images/icons/tag.png" alt="Tags" className="contact-icon" style={{ width: '16px', height: '16px' }} />
+            Tags
           </div>
-        </div>
-        
-        <div className="contact-item">
-          <PhoneOutlined className="contact-icon" />
-          <div className="contact-content">
-            <div className="contact-label">Phone</div>
-            <div className="contact-value">{creator.phone}</div>
-          </div>
-        </div>
-        
-        <div className="contact-item">
-          <img src="/images/icons/tag.png" alt="Tags" className="contact-icon" width={14} height={14} />
-          <div className="contact-content">
-            <div className="contact-label">Tags</div>
-            <div className="contact-tags">
-              {creator.tags.map((tag, index) => (
-                <span key={index} className="contact-tag">
-                  {tag}
-                </span>
-              ))}
-              <button className="contact-new-tag">
-                <PlusOutlined style={{ fontSize: '10px', marginRight: '4px' }} />
-                New Tag
-              </button>
-            </div>
+          <div className="contact-tags">
+            {creator.tags.length > 0 && (
+              <span className="contact-tag">{creator.tags[0]}</span>
+            )}
+            {creator.tags.length > 1 && (
+              <span className="contact-tag">+{creator.tags.length - 1} tags</span>
+            )}
+            <button className="contact-new-tag">
+              <PlusOutlined style={{ fontSize: '10px', marginRight: '4px' }} />
+              New Tag
+            </button>
           </div>
         </div>
       </div>
@@ -238,7 +259,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   const renderAttributes = () => (
     <div className="profile-drawer-section">
       <div className="section-header">
-        <h3 className="section-title">Default attributes</h3>
+        <h3 className="section-title">Creator details</h3>
         <button className="section-action">
           <SearchOutlined style={{ color: '#666' }} />
           <span>See all 66</span>
@@ -351,9 +372,9 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                   <div className="social-profile-cell">
                     <div className="platform-icon">
                       {profile.platform === 'instagram' ? (
-                        <img src="/images/icons/instagram.svg" alt="Instagram" />
+                        <img src="/images/icons/Name=insta.svg" alt="Instagram" />
                       ) : (
-                        <img src="/images/icons/tiktok.svg" alt="TikTok" />
+                        <img src="/images/icons/Name=tik-tok.svg" alt="TikTok" />
                       )}
                     </div>
                     <div>
@@ -495,6 +516,14 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
       )
     };
 
+    // Follower counts for the tabs
+    const followerCounts = {
+      all: "4.5M",
+      instagram: "2.4M",
+      tiktok: "1.1M",
+      youtube: "400K"
+    };
+
     return (
       <div className="profile-drawer-section">
         <h3 className="section-title">Social Performance</h3>
@@ -504,25 +533,33 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
             className={`social-tab ${activeSocialTab === 'all' ? 'active' : ''}`}
             onClick={() => setActiveSocialTab('all')}
           >
-            All accounts
+            <img src="/images/icons/Name=stats.svg" alt="Stats" className="tab-icon" />
+            <span>All accounts</span>
+            <span className="tab-stats">{followerCounts.all}</span>
           </button>
           <button 
             className={`social-tab ${activeSocialTab === 'instagram' ? 'active' : ''}`}
             onClick={() => setActiveSocialTab('instagram')}
           >
-            Instagram
+            <img src="/images/icons/Name=insta.svg" alt="Instagram" className="tab-icon" />
+            <span>Instagram</span>
+            <span className="tab-stats">{followerCounts.instagram}</span>
           </button>
           <button 
             className={`social-tab ${activeSocialTab === 'tiktok' ? 'active' : ''}`}
             onClick={() => setActiveSocialTab('tiktok')}
           >
-            TikTok
+            <img src="/images/icons/Name=tik-tok.svg" alt="TikTok" className="tab-icon" />
+            <span>Tik-Tok</span>
+            <span className="tab-stats">{followerCounts.tiktok}</span>
           </button>
           <button 
             className={`social-tab ${activeSocialTab === 'youtube' ? 'active' : ''}`}
             onClick={() => setActiveSocialTab('youtube')}
           >
-            YouTube
+            <img src="/images/icons/youtube.svg" alt="YouTube" className="tab-icon" />
+            <span>Youtube</span>
+            <span className="tab-stats">{followerCounts.youtube}</span>
           </button>
         </div>
         
@@ -649,7 +686,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     if (drawerState === 'saved' && !showSidebar) {
       return (
         <button className="manage-account-button" onClick={toggleSidebar}>
-          <img src="/images/icons/collapse-left.svg" alt="Expand" style={{ width: '16px', height: '16px' }} />
+          <img src="/images/icons/collapse-left.svg" alt="Collapse" />
           <span>Manage account</span>
         </button>
       );
@@ -715,7 +752,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
           <div className="profile-drawer-sidebar-column">
             <div className="profile-drawer-sidebar">
               <div className="sidebar-header">
-                <h3>Account manager</h3>
+                <h3>Creator manager</h3>
                 <div className="sidebar-header-actions">
                   <button className="sidebar-action-button">
                     <EllipsisOutlined />
