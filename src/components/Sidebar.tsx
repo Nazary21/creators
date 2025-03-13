@@ -6,7 +6,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ activeKey = 'search' }) => {
-  // Menu items
+  // Top menu items
   const menuItems = [
     { 
       key: 'search', 
@@ -30,12 +30,20 @@ const Sidebar: React.FC<SidebarProps> = ({ activeKey = 'search' }) => {
     },
   ];
 
-  // Settings item
-  const settingsItem = { 
-    key: 'settings', 
-    icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-7.svg', 
-    href: '/settings' 
-  };
+  // Bottom menu items
+  const bottomItems = [
+    { 
+      key: 'settings', 
+      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-7.svg', 
+      href: '/settings' 
+    },
+    // You can add a second icon here if needed
+    { 
+      key: 'profile', 
+      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-5.svg', 
+      href: '/profile' 
+    }
+  ];
 
   return (
     <div className="sidebar">
@@ -44,6 +52,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeKey = 'search' }) => {
       </div>
       
       <div className="sidebar-content">
+        {/* Top menu items */}
         <div className="sidebar-menu">
           {menuItems.map(item => (
             <Link 
@@ -56,13 +65,17 @@ const Sidebar: React.FC<SidebarProps> = ({ activeKey = 'search' }) => {
           ))}
         </div>
         
-        <div className="mt-auto mb-4">
-          <Link 
-            href={settingsItem.href}
-            className="sidebar-menu-item"
-          >
-            <img src={settingsItem.icon} alt={settingsItem.key} />
-          </Link>
+        {/* Bottom menu items */}
+        <div className="sidebar-bottom-menu" style={{ marginTop: 'auto', marginBottom: '16px' }}>
+          {bottomItems.map(item => (
+            <Link 
+              key={item.key} 
+              href={item.href}
+              className={`sidebar-menu-item ${activeKey === item.key ? 'active' : ''}`}
+            >
+              <img src={item.icon} alt={item.key} />
+            </Link>
+          ))}
         </div>
       </div>
     </div>
