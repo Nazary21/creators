@@ -112,7 +112,7 @@ const CreatorCard: React.FC<CreatorCardProps> = ({
               {/* Name and verification */}
               <div className="creator-name-row">
                 <h3 className="creator-name">{creator.name}</h3>
-                {creator.verified && <CheckCircleFilled className="verified-badge" />}
+                {creator.verified && <CheckCircleFilled className="creator-verified-badge-inline" />}
               </div>
               
               {/* Age, gender, location */}

@@ -288,9 +288,6 @@ const CreatorProfile: React.FC<CreatorProfileProps> = ({ creator, messages = [] 
                 <Title level={4} style={{ margin: 0 }}>
                   {creator.name}
                 </Title>
-                {creator.verified && (
-                  <CheckCircleFilled className="text-blue-500 ml-2" />
-                )}
               </div>
               
               {creator.status && (
