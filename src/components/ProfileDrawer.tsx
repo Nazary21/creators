@@ -932,49 +932,50 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
             </div>
             
             <div className="message-composer-wrapper">
-              <div className="message-composer-options">
-                <button className="composer-option">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M9 9H9.01" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M15 9H15.01" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-                <button className="composer-option">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M8.5 10C9.32843 10 10 9.32843 10 8.5C10 7.67157 9.32843 7 8.5 7C7.67157 7 7 7.67157 7 8.5C7 9.32843 7.67157 10 8.5 10Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M21 15L16 10L5 21" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-                <button className="composer-option">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8 2V5" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M16 2V5" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M3 9H21" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  <span>Schedule</span>
-                </button>
-                
-                <div className="composer-send-options">
-                  <span>Send to</span>
-                  <div className="send-platform">
-                    <img src="/images/icons/Name=tik-tok.svg" alt="TikTok" width="16" height="16" />
-                    <span>Tik-Tok</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M6 9L12 15L18 9" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <div className="message-composer-card">
+                <div className="message-composer-header">
+                  <button className="composer-template-btn">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 5V19" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M5 12H19" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
+                    <span>Add template</span>
+                  </button>
+                  
+                  <div className="campaign-selector">
+                    <img src="/images/icons/pajamas_project.svg" alt="Campaign" width="12" height="12" />
+                    <span>California Skaters</span>
                   </div>
                 </div>
-              </div>
-              
-              <div className="message-input-container">
-                <div className="message-input" contentEditable="true" data-placeholder={`Hi ${creator.name.split(' ')[0]},`}>Hi {creator.name.split(' ')[0]},</div>
-                <button className="send-button">
-                  <span>Send</span>
-                </button>
+                
+                <div className="message-input-container">
+                  <div className="message-input" contentEditable="true" data-placeholder={`Hi ${creator.name.split(' ')[0]},`}>Hi {creator.name.split(' ')[0]},</div>
+                </div>
+                
+                <div className="message-composer-footer">
+                  <button className="schedule-btn">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M12 6V12L16 14" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <span>Schedule</span>
+                  </button>
+                  
+                  <div className="send-options">
+                    <span>Send to</span>
+                    <div className="send-platform">
+                      <img src="/images/icons/Name=tik-tok.svg" alt="TikTok" width="12" height="12" />
+                      <span>Tik-Tok</span>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 9L12 15L18 9" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                    
+                    <button className="send-button">
+                      <span>Send</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1097,7 +1098,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                 </button>
               </div>
               
-              <div className="sidebar-content">
+              <div className={`${activeTab === 'messages' ? 'sidebar-content-messages' : 'sidebar-content'}`}>
                 {renderSidebarContent()}
               </div>
             </div>
