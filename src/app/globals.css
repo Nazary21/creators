@@ -2074,7 +2074,7 @@ USAGE EXAMPLE:
   justify-content: center;
   color: #666666;
   font-size: 15px;
-  margin-right: 8px;
+  margin-right: 0px;
   flex-shrink: 0;
 }
 
