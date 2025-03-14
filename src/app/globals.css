@@ -470,9 +470,9 @@ a {
 }
 
 .results-count-text {
-  font-weight: 500;
+  font-weight: 400;
   font-size: 14px;
-  color: var(--gray-700);
+  color: var(--gray-500);
 }
 
 .results-type {
@@ -485,7 +485,8 @@ a {
 
 .results-type-text {
   font-size: 14px;
-  color: var(--gray-500);
+  font-weight: 500;
+  color: var(--gray-700);
 }
 
 .results-type-icon {
@@ -603,7 +604,7 @@ a {
 
 .creator-details {
   font-size: 13px;
-  color: var(--gray-500);
+  color: var(--gray-600);
   margin-bottom: 6px;
   line-height: 1.4;
 }

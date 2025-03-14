@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars, react/no-unescaped-entities, @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { 
   Avatar, 

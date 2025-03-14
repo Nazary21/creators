@@ -1,5 +1,8 @@
 # Archive UI Enhancement Project - Progress Report
 
+
+########## Round 1 advice ##########
+
 ## Original Enhancement Plan
 
 1. **Scrollbar Improvements**
@@ -87,3 +90,167 @@
 - Strengthened code quality enforcement by elevating linting rules
 - Improved icon consistency for better UX clarity by standardizing on Ant Design icons
 - Simplified UI by removing redundant platform icons on content cards
+
+
+
+
+########## Round 2 advice ##########
+
+### **Updated Suggestions Based on Your New Logs**
+
+Since the same ESLint issues persist despite the fixes, let's go step by step to make sure nothing is being missed.
+
+---
+
+## **1. Verify That ESLint is Actually Being Disabled During Build**
+It looks like ESLint is **still running** in your deployment logs, even though you've attempted to disable it.
+
+### **A. Double-check `next.config.js`**
+Ensure your `next.config.js` (or `next.config.mjs`) contains this:
+```js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true, // Ensures ESLint won't block the build
+  },
+};
+
+export default nextConfig;
+```
+
+If using **TypeScript** (`next.config.ts`):
+```ts
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+};
+
+export default nextConfig;
+```
+
+### **B. Modify `.env.production`**
+Add this if not already present:
+```
+NEXT_DISABLE_ESLINT=1
+```
+
+### **C. Update `package.json` Build Script**
+Ensure your `package.json` contains:
+```json
+"scripts": {
+  "dev": "next dev",
+  "build": "NEXT_DISABLE_ESLINT=1 next build",
+  "start": "next start",
+  "lint": "next lint"
+}
+```
+🚀 **Re-run the deployment after these changes.** If ESLint is still running, move to the next step.
+
+---
+
+## **2. Fully Remove Legacy `.eslintrc.json` (if applicable)**
+Since Next.js 15 uses the new ESLint flat config system, having both `eslint.config.mjs` and `.eslintrc.json` can cause conflicts.
+
+- **If you still have `.eslintrc.json`, delete it**:
+  ```sh
+  rm .eslintrc.json
+  ```
+- Instead, ensure you are using `eslint.config.mjs`:
+  ```js
+  import { FlatCompat } from "@eslint/eslintrc";
+
+  const compat = new FlatCompat();
+
+  export default [
+    ...compat.extends("next/core-web-vitals", "next/typescript"),
+    {
+      rules: {
+        "@typescript-eslint/no-unused-vars": "warn",
+        "react/no-unescaped-entities": "warn",
+        "@next/next/no-img-element": "warn",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "react-hooks/exhaustive-deps": "warn"
+      },
+      ignores: ["node_modules/**", ".next/**", "public/**"]
+    }
+  ];
+  ```
+---
+
+## **3. Check If ESLint is Running Locally Before Deploying**
+To confirm whether ESLint errors are causing the failure **before deploying to Vercel**, try this:
+
+1. **Run ESLint Locally**
+   ```sh
+   npm run lint
+   ```
+   If this shows errors, they need to be fixed or suppressed before deployment.
+
+2. **Try a Local Production Build**
+   ```sh
+   npm run build
+   ```
+   If the build fails locally, fix errors before deploying.
+
+3. **If the Build Fails, Temporarily Skip Linting Locally**
+   ```sh
+   NEXT_DISABLE_ESLINT=1 npm run build
+   ```
+   If this works locally but Vercel still fails, then Vercel is likely ignoring the env setting.
+
+---
+
+## **4. Force Vercel to Recognize Environment Variables**
+It’s possible that Vercel is not recognizing `NEXT_DISABLE_ESLINT=1`.
+
+### **A. Set Env Variables in Vercel Dashboard**
+1. Go to **Vercel Dashboard**
+2. Select your project
+3. Go to **Settings → Environment Variables**
+4. Add:
+   ```
+   NEXT_DISABLE_ESLINT = 1
+   ```
+5. Deploy again.
+
+### **B. Delete Vercel Build Cache**
+1. In your **Vercel Dashboard**, go to **Deployments**
+2. Click on the failed deployment
+3. Find the "Redeploy" button and choose **"Clear Cache & Redeploy"**
+
+---
+
+## **5. If All Else Fails – Suppress Specific Rules**
+If ESLint **still runs** even after disabling it, selectively ignore rules in affected files.
+
+For example, add this to the top of files that cause ESLint errors:
+
+```tsx
+/* eslint-disable @typescript-eslint/no-unused-vars, react/no-unescaped-entities */
+```
+
+Or modify `eslint.config.mjs`:
+```js
+{
+  rules: {
+    "@typescript-eslint/no-unused-vars": "off",
+    "react/no-unescaped-entities": "off"
+  }
+}
+```
+
+---
+
+## **Final Checklist**
+✅ `NEXT_DISABLE_ESLINT=1` is set in `.env.production` and Vercel dashboard  
+✅ `next.config.js` includes `eslint: { ignoreDuringBuilds: true }`  
+✅ `.eslintrc.json` is **removed** if `eslint.config.mjs` is used  
+✅ `npm run lint` runs successfully before deployment  
+✅ **If all else fails**, suppress ESLint rules at the file level  
+
+---
+
+This should **guarantee a successful deployment**. Try these steps and let me know what happens! 🚀
