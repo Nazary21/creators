@@ -81,7 +81,7 @@ const CreatorProfile: React.FC<CreatorProfileProps> = ({ creator, messages = [] 
       dataIndex: 'engagementRate',
       key: 'engagementRate',
       align: 'right' as const,
-      render: (value: number) => `${value.toFixed(1)}`,
+      render: (value: number) => `${value.toFixed(2)}%`,
     },
     {
       title: 'EMV',

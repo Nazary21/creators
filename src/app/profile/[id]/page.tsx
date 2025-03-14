@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import { Button, Typography, Tabs, Spin } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-import { creators, messages } from '@/data/mockData';
+import { expandedCreators, messages } from '@/data/mockData';
 import Sidebar from '@/components/Sidebar';
 import CreatorProfile from '@/components/CreatorProfile';
 
@@ -17,7 +17,7 @@ export default function ProfilePage() {
   const id = params.id as string;
   
   // Find the creator by ID
-  const creator = creators.find(c => c.id === id);
+  const creator = expandedCreators.find(c => c.id === id);
   
   // Find messages for this creator
   const creatorMessages = messages.filter(m => m.id.startsWith('m'));

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, react/no-unescaped-entities, @next/next/no-img-element, react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   // CheckCircleFilled, // Unused import
   CloseOutlined, 
@@ -14,10 +14,23 @@ import {
   SearchOutlined,
   // ExpandOutlined, // Unused import
   EllipsisOutlined,
-  CommentOutlined
+  CommentOutlined,
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+  HomeOutlined,
+  UserOutlined,
+  TagOutlined,
+  DesktopOutlined,
+  TableOutlined,
+  BarChartOutlined,
+  KeyOutlined,
+  ExpandOutlined
 } from '@ant-design/icons';
 import { Creator } from '@/data/mockData';
-// import Image from 'next/image'; // Unused import
+import { fetchUnsplashImage } from '@/utils/imageUtils';
+import { Card, Button, Tag, Typography, Table, Tabs, Image } from 'antd';
+
+const { Text } = Typography;
 
 interface ProfileDrawerProps {
   creator: Creator;
@@ -33,24 +46,67 @@ type DrawerState = 'default' | 'saved';
 type DrawerTab = 'overview' | 'messages' | 'notes';
 type SocialTab = 'all' | 'instagram' | 'tiktok' | 'youtube';
 
-// Helper function to get story image path
-const getStoryImagePath = (creatorId: string, index: number) => {
-  const images = [
-    '/images/Stories/photo-1506790144-fe3c68e4247d.avif',
-    '/images/Stories/photo-1517732306149-e8f829eb588a.avif',
-    '/images/Stories/photo-1527856263669-12c3a0af2aa6.avif',
-    '/images/Stories/photo-1528543606781-2f6e6857f318.avif',
-    '/images/Stories/photo-1532635241-17e820acc59f.avif',
-    '/images/Stories/photo-1562593028-1fe2d15bde36.avif',
-    '/images/Stories/photo-1741526798351-50eeb46b2a06.avif',
-    '/images/Stories/photo-1741567348603-0bef4612bea2.avif',
-    '/images/Stories/premium_photo-1661895081205-791c94434c78.avif',
-    '/images/Stories/premium_photo-1663054774427-55adfb2be76f.avif'
-  ];
+// Interface for image state with attribution
+interface UnsplashImage {
+  url: string;
+  isLoading: boolean;
+  attribution?: {
+    name: string;
+    username: string;
+    link: string;
+  }
+}
+
+// Interface for message data
+interface MessageData {
+  id: string;
+  sender: 'creator' | 'manager';
+  timestamp: string;
+  content: string;
+  creatorEmail?: string;
+  managerEmail?: string;
+}
+
+// Helper function to load a story image from Unsplash based on creator tags
+const loadStoryImage = async (creatorId: string, index: number, creatorTags?: string[]): Promise<UnsplashImage> => {
+  // For all creators, use API with their tags
+  if (creatorTags && creatorTags.length > 0) {
+    try {
+      // Get tag based on creator and index
+      const tagIndex = (parseInt(creatorId) + index) % creatorTags.length;
+      const primaryTag = creatorTags[tagIndex].toLowerCase();
+      
+      // Secondary categories to add variety
+      const categories = ['portrait', 'lifestyle', 'travel', 'fashion', 'fitness', 'food', 
+                        'photography', 'adventure', 'urban', 'nature', 'art'];
+      const secondaryTag = categories[index % categories.length];
+      
+      // Create a signature based on creator ID and index for consistent images
+      const signature = `${creatorId}-${index}`;
+      
+      // Get image from our API
+      const imageData = await fetchUnsplashImage(primaryTag, secondaryTag, signature);
+      
+      return {
+        url: imageData.url,
+        isLoading: false,
+        attribution: imageData.attribution
+      };
+    } catch (error) {
+      console.error('Error loading image:', error);
+    }
+  }
   
-  // Use a deterministic way to select images based on creator ID and index
-  const imageIndex = (parseInt(creatorId) * 3 + index) % images.length;
-  return images[Math.abs(imageIndex)];
+  // Fallback placeholder if no tags or error
+  return {
+    url: 'https://picsum.photos/800/1000?grayscale',
+    isLoading: false,
+    attribution: {
+      name: "Lorem Picsum",
+      username: "picsum",
+      link: "https://picsum.photos"
+    }
+  };
 };
 
 // Generate random like counts distinct from follower counts
@@ -58,6 +114,40 @@ const getLikeCount = (followersCount: string) => {
   const followers = parseInt(followersCount.replace(/[^\d]/g, ''));
   const variation = (0.2 + Math.random() * 0.6); // 20-80% of followers
   return Math.floor(followers * variation).toLocaleString();
+};
+
+// Helper function to format message content with creator name
+const formatMessageContent = (content: string, creatorName: string): string => {
+  return content.replace('[Creator Name]', creatorName)
+               .replace('[creator name]', creatorName)
+               .replace('[CreatorName]', creatorName)
+               .replace('[creatorName]', creatorName);
+};
+
+// Mock message data generator
+const getMockMessages = (creator: Creator): MessageData[] => {
+  // Consistent manager name
+  const managerName = 'Mark';
+  const managerEmail = 'mark@yourcompany.com';
+  
+  return [
+    {
+      id: 'm1',
+      sender: 'manager',
+      timestamp: '5 Mar at 10:34am',
+      content: `Hi ${creator.name.split(' ')[0]},\n\nI hope this message finds you well! I'm reaching out one more time about our collaboration opportunity at [Brand Name].\n\nWe're big fans of your work and believe your audience would love our [product/service]. This partnership would include:\n\n- [Compensation detail]\n- [Product detail]\n- [Creative freedom detail]\n- [Timeline detail]\n\nWe need to finalize our creator roster by [date]. If we don't hear back, we'll assume the timing isn't right, but we'd love to keep you in mind for future opportunities.\n\nAll the best,\nMark`,
+      creatorEmail: creator.email,
+      managerEmail: managerEmail
+    },
+    {
+      id: 'm2',
+      sender: 'creator',
+      timestamp: '15 Mar at 9:00am',
+      content: `Hi Mark,\n\nI'd be pleased to work with you but I'm all booked till March. We can sign contract this week and start working when there's room, so you have your post reserved.\n\nBest,\n${creator.name.split(' ')[0]}`,
+      creatorEmail: creator.email,
+      managerEmail: managerEmail
+    }
+  ];
 };
 
 const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ 
@@ -73,10 +163,26 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   const [activeTab, setActiveTab] = useState<DrawerTab>('overview');
   const [showSidebar, setShowSidebar] = useState<boolean>(true);
   const [activeSocialTab, setActiveSocialTab] = useState<SocialTab>('all');
+  const [isHeaderSticky, setIsHeaderSticky] = useState<boolean>(false);
+  
+  // State for content images with attribution
+  const [contentImages, setContentImages] = useState<UnsplashImage[]>([]);
+  const imagesLoaded = useRef(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+  
+  // Reset image loaded state when creator changes
+  useEffect(() => {
+    // Reset images loaded flag when creator changes
+    imagesLoaded.current = false;
+    
+    // Log for debugging
+    console.log(`ProfileDrawer received creator: ${creator.name} (${creator.id})`);
+  }, [creator.id]);
   
   // Handle drawer close
   const handleClose = () => {
     onClose();
+    setDrawerState('default');
   };
   
   // Set the drawer state based on creator's saved status
@@ -89,6 +195,34 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
       setShowSidebar(true);
     }
   }, [creator.isSaved]);
+  
+  // Handle scroll events to determine if header should show border
+  useEffect(() => {
+    const handleScroll = () => {
+      if (contentRef.current) {
+        // Get the position of the avatar element
+        const avatarElement = contentRef.current.querySelector('.profile-drawer-avatar');
+        if (avatarElement) {
+          const avatarRect = avatarElement.getBoundingClientRect();
+          const headerHeight = 60; // Approximate header height
+          
+          // If the avatar top edge is above the header bottom (is scrolled under header)
+          setIsHeaderSticky(avatarRect.top <= headerHeight);
+        }
+      }
+    };
+
+    const contentElement = contentRef.current;
+    if (contentElement) {
+      contentElement.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      if (contentElement) {
+        contentElement.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [isOpen]);
   
   // Disable body scrolling when drawer is open
   useEffect(() => {
@@ -111,10 +245,10 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
       if (isOpen) {
         if (e.key === 'ArrowUp' && onPrevious) {
           e.preventDefault();
-          onPrevious(e as unknown as React.MouseEvent);
+          onPrevious(new MouseEvent('click') as unknown as React.MouseEvent);
         } else if (e.key === 'ArrowDown' && onNext) {
           e.preventDefault();
-          onNext(e as unknown as React.MouseEvent);
+          onNext(new MouseEvent('click') as unknown as React.MouseEvent);
         } else if (e.key === 'Escape') {
           handleClose();
         }
@@ -140,13 +274,60 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     setShowSidebar(prevState => !prevState);
   };
 
+  // Effect to load images when the drawer opens or creator changes
+  useEffect(() => {
+    if (isOpen && !imagesLoaded.current) {
+      const loadImages = async () => {
+        // Initialize with loading placeholders
+        const initialImages = Array(6).fill({
+          url: 'https://via.placeholder.com/640x800?text=Loading...',
+          isLoading: true
+        });
+        setContentImages(initialImages);
+        
+        // Load each image - increase to 6 images
+        const loadedImages = await Promise.all(
+          Array(6).fill(null).map((_, index) => 
+            loadStoryImage(creator.id, index, creator.tags)
+          )
+        );
+        
+        setContentImages(loadedImages);
+        imagesLoaded.current = true;
+        
+        console.log(`Loaded ${loadedImages.length} images for creator ${creator.name}`);
+      };
+      
+      loadImages();
+    }
+    
+    // Reset images loaded flag when drawer closes
+    if (!isOpen) {
+      imagesLoaded.current = false;
+    }
+  }, [isOpen, creator.id, creator.tags, creator.name]);
+
+  // Group messages by date for rendering
+  const groupMessagesByDate = (messages: MessageData[]) => {
+    const grouped: { [key: string]: MessageData[] } = {};
+    
+    messages.forEach(message => {
+      if (!grouped[message.timestamp]) {
+        grouped[message.timestamp] = [];
+      }
+      grouped[message.timestamp].push(message);
+    });
+    
+    return grouped;
+  };
+
   // Render the header section
   const renderHeader = () => (
-    <div className="profile-drawer-header">
+    <div className={`profile-drawer-header ${isHeaderSticky ? 'sticky' : ''}`}>
       <div className="profile-drawer-header-main">
         <div className="profile-drawer-avatar">
           <img 
-            src={creator.profileImage || `https://source.unsplash.com/random/72x72/?portrait&sig=${creator.id}`}
+            src={creator.profileImage}
             alt={creator.name}
           />
         </div>
@@ -155,7 +336,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
           <div className="profile-drawer-name-row">
             <h3 className="profile-drawer-name">{creator.name}</h3>
           </div>
-          <div className="profile-status-pill">
+          <div className={`profile-status-pill ${drawerState === 'saved' ? "primary" : ""}`}>
             <div className="profile-status-icon">
               <img 
                 src={drawerState === 'saved' ? "/images/icons/progress-manual-cf.svg" : "/images/icons/progress-manual-cf.svg"} 
@@ -277,7 +458,9 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
           
           <div className="attributes-table-row">
             <div className="attributes-table-cell attribute-label">
-              <EnvironmentOutlined className="attribute-icon" />
+              <div className="attribute-icon">
+                <EnvironmentOutlined />
+              </div>
               <span>Shipping address</span>
               <span className="attribute-type">String</span>
             </div>
@@ -288,9 +471,11 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
           
           <div className="attributes-table-row">
             <div className="attributes-table-cell attribute-label">
-              <svg className="attribute-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16.5 13C14.76 13 13.09 13.81 12 15.09C10.91 13.81 9.24 13 7.5 13C4.42 13 2 15.41 2 18.5C2 21.58 4.42 24 7.5 24C9.24 24 10.91 23.19 12 21.91C13.09 23.19 14.76 24 16.5 24C19.58 24 22 21.58 22 18.5C22 15.41 19.58 13 16.5 13ZM7.5 22C5.5 22 4 20.5 4 18.5C4 16.5 5.5 15 7.5 15C9.5 15 11 16.5 11 18.5C11 20.5 9.5 22 7.5 22ZM16.5 22C14.5 22 13 20.5 13 18.5C13 16.5 14.5 15 16.5 15C18.5 15 20 16.5 20 18.5C20 20.5 18.5 22 16.5 22Z" fill="currentColor"/>
-              </svg>
+              <div className="attribute-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 4C10.4178 4 8.87104 4.46919 7.55544 5.34824C6.23985 6.22729 5.21447 7.47672 4.60897 8.93853C4.00347 10.4003 3.84504 12.0089 4.15372 13.5607C4.4624 15.1126 5.22433 16.538 6.34315 17.6569C7.46197 18.7757 8.88743 19.5376 10.4393 19.8463C11.9911 20.155 13.5997 19.9965 15.0615 19.391C16.5233 18.7855 17.7727 17.7602 18.6518 16.4446C19.5308 15.129 20 13.5823 20 12C20 9.87827 19.1571 7.84344 17.6569 6.34315C16.1566 4.84285 14.1217 4 12 4ZM12 18C10.8133 18 9.65328 17.6481 8.66658 16.9888C7.67989 16.3295 6.91085 15.3925 6.45673 14.2961C6.0026 13.1997 5.88378 11.9933 6.11529 10.8295C6.3468 9.66557 6.91825 8.59647 7.75736 7.75736C8.59648 6.91824 9.66558 6.3468 10.8295 6.11529C11.9933 5.88378 13.1997 6.0026 14.2961 6.45672C15.3925 6.91085 16.3295 7.67988 16.9888 8.66658C17.6481 9.65327 18 10.8133 18 12C18 13.5913 17.3679 15.1174 16.2426 16.2426C15.1174 17.3679 13.5913 18 12 18ZM17 11.5H13V7.5H11V13.5H17V11.5Z" fill="currentColor"/>
+                </svg>
+              </div>
               <span>Total followers</span>
               <span className="attribute-type">Formula</span>
             </div>
@@ -301,9 +486,11 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
 
           <div className="attributes-table-row">
             <div className="attributes-table-cell attribute-label">
-              <svg className="attribute-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 19H2C2 15.6863 4.68629 13 8 13H16C19.3137 13 22 15.6863 22 19H20C20 16.7909 18.2091 15 16 15H8C5.79086 15 4 16.7909 4 19ZM12 12C8.685 12 6 9.315 6 6C6 2.685 8.685 0 12 0C15.315 0 18 2.685 18 6C18 9.315 15.315 12 12 12ZM12 10C14.21 10 16 8.21 16 6C16 3.79 14.21 2 12 2C9.79 2 8 3.79 8 6C8 8.21 9.79 10 12 10Z" fill="currentColor"/>
-              </svg>
+              <div className="attribute-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 20H18V16C18 15.7348 18.1054 15.4804 18.2929 15.2929C18.4804 15.1054 18.7348 15 19 15C19.2652 15 19.5196 15.1054 19.7071 15.2929C19.8946 15.4804 20 15.7348 20 16V20ZM17 20H15V13C15 12.7348 15.1054 12.4804 15.2929 12.2929C15.4804 12.1054 15.7348 12 16 12C16.2652 12 16.5196 12.1054 16.7071 12.2929C16.8946 12.4804 17 12.7348 17 13V20ZM14 20H12V10C12 9.73478 12.1054 9.48043 12.2929 9.29289C12.4804 9.10536 12.7348 9 13 9C13.2652 9 13.5196 9.10536 13.7071 9.29289C13.8946 9.48043 14 9.73478 14 10V20ZM11 20H9V3C9 2.73478 9.10536 2.48043 9.29289 2.29289C9.48043 2.10536 9.73478 2 10 2C10.2652 2 10.5196 2.10536 10.7071 2.29289C10.8946 2.48043 11 2.73478 11 3V20ZM6 20H4V6C4 5.73478 4.10536 5.48043 4.29289 5.29289C4.48043 5.10536 4.73478 5 5 5C5.26522 5 5.51957 5.10536 5.70711 5.29289C5.89464 5.48043 6 5.73478 6 6V20Z" fill="currentColor"/>
+                </svg>
+              </div>
               <span>Content Style</span>
               <span className="attribute-type">Collection</span>
             </div>
@@ -318,7 +505,9 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
           
           <div className="attributes-table-row">
             <div className="attributes-table-cell attribute-label">
-              <CommentOutlined className="attribute-icon" />
+              <div className="attribute-icon">
+                <CommentOutlined />
+              </div>
               <span>Languages Spoken</span>
               <span className="attribute-type">Collection</span>
             </div>
@@ -373,7 +562,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                 <td className="posts-count">{profile.followers}</td>
                 <td className="posts-count">{profile.totalPosts}</td>
                 <td>{profile.lastPost}d</td>
-                <td>{profile.engagementRate}%</td>
+                <td>{parseFloat(profile.engagementRate.toString()).toFixed(2)}%</td>
                 <td>{profile.emv}</td>
                 <td>{profile.impressions}</td>
               </tr>
@@ -412,7 +601,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
               <td className="posts-count">{creator.socialProfiles[0].followers}</td>
               <td className="posts-count">{creator.socialProfiles[0].totalPosts}</td>
               <td>{creator.socialProfiles[0].lastPost}d</td>
-              <td>{creator.socialProfiles[0].engagementRate}%</td>
+              <td>{parseFloat(creator.socialProfiles[0].engagementRate.toString()).toFixed(2)}%</td>
               <td>3.2k</td>
               <td>15k</td>
               <td>95k</td>
@@ -452,7 +641,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
               <td className="posts-count">{creator.socialProfiles[1].followers}</td>
               <td className="posts-count">{creator.socialProfiles[1].totalPosts}</td>
               <td>{creator.socialProfiles[1].lastPost}d</td>
-              <td>{creator.socialProfiles[1].engagementRate}%</td>
+              <td>{parseFloat(creator.socialProfiles[1].engagementRate.toString()).toFixed(2)}%</td>
               <td>45k</td>
               <td>258k</td>
               <td>32k</td>
@@ -563,42 +752,40 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   const renderContentSamples = () => (
     <div className="profile-drawer-section">
       <div className="section-header">
-        <h3 className="section-title">Content</h3>
-        <span className="posts-count">{creator.contentCount} Posts</span>
+        <h3 className="section-title">Content Samples</h3>
+        <a href="#" className="section-action">View All ({creator.contentCount})</a>
       </div>
       
-      <div className="content-card">
-        <div className="content-samples-grid">
-          {/* Generate 6 content samples using the helper function */}
-          {[...Array(6)].map((_, index) => (
-            <div key={index} className="content-sample">
-              <div className="content-sample-image">
-                <img 
-                  src={getStoryImagePath(creator.id, index)} 
-                  alt="Content sample" 
-                  className="sample-image"
-                />
-                
-                <div className="content-sample-overlay">
-                  <div className="content-sample-stats">
-                    <div className="stat-item">
-                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="heart-icon">
-                        <path d="M8 15.36C7.768 15.36 7.544 15.296 7.352 15.176C6.624 14.688 5.928 14.208 5.304 13.768L5.288 13.76C3.712 12.64 2.328 11.648 1.368 10.664C0.28 9.544 0 8.472 0 7.36C0 6.28 0.36 5.288 1.016 4.56C1.68 3.824 2.608 3.376 3.592 3.376C4.312 3.376 4.96 3.624 5.536 4.112C5.824 4.352 6.088 4.64 6.328 4.976C6.44 5.144 6.592 5.36 6.72 5.56C6.848 5.36 6.992 5.144 7.104 4.976C7.344 4.64 7.608 4.352 7.896 4.112C8.472 3.624 9.12 3.376 9.84 3.376C10.824 3.376 11.752 3.824 12.416 4.56C13.072 5.288 13.432 6.28 13.432 7.36C13.432 8.472 13.152 9.544 12.064 10.664C11.104 11.648 9.72 12.64 8.144 13.76L8.128 13.768C7.504 14.208 6.808 14.688 6.08 15.176C5.888 15.296 5.664 15.36 5.432 15.36H8Z" fill="white"/>
-                      </svg>
-                      {getLikeCount(creator.socialProfiles[0].followers)}
-                    </div>
-                    <div className="stat-item">
-                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="comment-icon">
-                        <path d="M8 0C3.6 0 0 3.1 0 7C0 8.9 0.8 10.6 2.1 11.9C2 12.6 1.6 13.8 0.5 14.7C0.3 14.9 0.4 15.2 0.7 15.2C2.5 15.2 4 14.5 5 13.7C6 14 7 14.1 8 14.1C12.4 14.1 16 11 16 7C16 3.1 12.4 0 8 0ZM8 12.3C7.1 12.3 6.2 12.1 5.3 11.8C5.1 11.7 4.8 11.8 4.7 11.9C4.2 12.3 3.2 12.8 2.3 13C2.8 12.1 3 11.1 3.1 10.4C3.1 10.1 3 9.8 2.8 9.6C1.8 8.6 1.3 7.8 1.3 7C1.3 3.9 4.2 1.5 8 1.5C11.8 1.5 14.7 3.9 14.7 7C14.7 10.1 11.8 12.3 8 12.3Z" fill="white"/>
-                      </svg>
-                      {Math.floor(parseInt(getLikeCount(creator.socialProfiles[0].followers).replace(/,/g, '')) * 0.05).toLocaleString()}
-                    </div>
+      <div className="content-samples-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+        {contentImages.map((image, index) => (
+          <div key={index} className="content-sample">
+            <div className="content-sample-image">
+              <img 
+                src={image.url} 
+                alt="Content sample" 
+                className="sample-image"
+              />
+              
+              <div className="content-sample-overlay">
+                <div className="content-sample-stats">
+                  <div className="stat-item">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M8 15.36C7.768 15.36 7.544 15.296 7.352 15.176C6.624 14.688 5.928 14.208 5.304 13.768L5.288 13.76C3.712 12.64 2.328 11.648 1.368 10.664C0.28 9.544 0 8.472 0 7.36C0 6.28 0.36 5.288 1.016 4.56C1.68 3.824 2.608 3.376 3.592 3.376C4.312 3.376 4.96 3.624 5.536 4.112C5.824 4.352 6.088 4.64 6.328 4.976C6.44 5.144 6.592 5.36 6.72 5.56C6.848 5.36 6.992 5.144 7.104 4.976C7.344 4.64 7.608 4.352 7.896 4.112C8.472 3.624 9.12 3.376 9.84 3.376C10.824 3.376 11.752 3.824 12.416 4.56C13.072 5.288 13.432 6.28 13.432 7.36C13.432 8.472 13.152 9.544 12.064 10.664C11.104 11.648 9.72 12.64 8.144 13.76L8.128 13.768C7.504 14.208 6.808 14.688 6.08 15.176C5.888 15.296 5.664 15.36 5.432 15.36H8Z" fill="white"/>
+                    </svg>
+                    {getLikeCount(creator.socialProfiles[0].followers)}
                   </div>
                 </div>
+                
+                {/* Attribution info for Unsplash images */}
+                {image.attribution && (
+                  <div style={{ position: 'absolute', bottom: '5px', left: '5px', fontSize: '8px', color: 'white', textShadow: '0 0 2px black' }}>
+                    Photo: Lorem Picsum
+                  </div>
+                )}
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -681,25 +868,9 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                 <div className="attribute-item">
                   <div className="attribute-item-label">
                     <div className="attribute-item-icon">
-                      <span style={{ fontSize: '18px' }}>{ '{' }</span>
-                    </div>
-                    <div className="attribute-item-label-container">
-                      Content Style
-                      <span className="attribute-item-type">Collection</span>
-                    </div>
-                  </div>
-                  <div className="attribute-item-value">
-                    <div className="attribute-value-content">
-                      <span className="attribute-tag">Educational</span>
-                      <span className="attribute-entries">+4 entries</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="attribute-item">
-                  <div className="attribute-item-label">
-                    <div className="attribute-item-icon">
-                      Σ
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4C10.4178 4 8.87104 4.46919 7.55544 5.34824C6.23985 6.22729 5.21447 7.47672 4.60897 8.93853C4.00347 10.4003 3.84504 12.0089 4.15372 13.5607C4.4624 15.1126 5.22433 16.538 6.34315 17.6569C7.46197 18.7757 8.88743 19.5376 10.4393 19.8463C11.9911 20.155 13.5997 19.9965 15.0615 19.391C16.5233 18.7855 17.7727 17.7602 18.6518 16.4446C19.5308 15.129 20 13.5823 20 12C20 9.87827 19.1571 7.84344 17.6569 6.34315C16.1566 4.84285 14.1217 4 12 4ZM12 18C10.8133 18 9.65328 17.6481 8.66658 16.9888C7.67989 16.3295 6.91085 15.3925 6.45673 14.2961C6.0026 13.1997 5.88378 11.9933 6.11529 10.8295C6.3468 9.66557 6.91825 8.59647 7.75736 7.75736C8.59648 6.91824 9.66558 6.3468 10.8295 6.11529C11.9933 5.88378 13.1997 6.0026 14.2961 6.45672C15.3925 6.91085 16.3295 7.67988 16.9888 8.66658C17.6481 9.65327 18 10.8133 18 12C18 13.5913 17.3679 15.1174 16.2426 16.2426C15.1174 17.3679 13.5913 18 12 18ZM17 11.5H13V7.5H11V13.5H17V11.5Z" fill="currentColor"/>
+                      </svg>
                     </div>
                     <div className="attribute-item-label-container">
                       Total followers
@@ -710,56 +881,101 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                     <div className="attribute-value-content">221.7k</div>
                   </div>
                 </div>
-                
-                <div className="attribute-item">
-                  <div className="attribute-item-label">
-                    <div className="attribute-item-icon">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12.87 15.07L10.33 12.56L10.36 12.53C12.1 10.59 13.34 8.36 14.07 6H17V4H10V2H8V4H1V6H12.17C11.5 7.92 10.44 9.75 9 11.35C8.07 10.32 7.3 9.19 6.69 8H4.69C5.42 9.63 6.42 11.17 7.67 12.56L2.58 17.58L4 19L9 14L12.11 17.11L12.87 15.07ZM18.5 10H16.5L12 22H14L15.12 19H19.87L21 22H23L18.5 10ZM15.88 17L17.5 12.67L19.12 17H15.88Z" fill="currentColor"/>
-                      </svg>
-                    </div>
-                    <div className="attribute-item-label-container">
-                      Languages Spoken
-                      <span className="attribute-item-type">Collection</span>
-                    </div>
-                  </div>
-                  <div className="attribute-item-value">
-                    <div className="attribute-tags">
-                      <span className="attribute-tag">Chinese</span>
-                      <span className="attribute-tag">Spanish</span>
-                      <span className="attribute-tag">English</span>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
         );
       case 'messages':
+        const mockMessages = getMockMessages(creator);
+        const groupedMessages = groupMessagesByDate(mockMessages);
+        
         return (
           <div className="sidebar-messages">
-            <div className="message-date">5 Mar at 10:34am</div>
-            
-            <div className="message-item">
-              <div className="message-avatar">U</div>
-              <div className="message-content">
-                <div className="message-header">
-                  You
-                  <span className="message-destination">to {creator.email}</span>
-                </div>
-                <div className="message-body">
-                  <p>Hi {creator.name.split(' ')[0]},</p>
-                  <p>I hope this message finds you well! We&apos;re reaching out about a potential collaboration opportunity with our brand.</p>
-                  <p>Would you be interested in learning more?</p>
-                </div>
-              </div>
+            <div className="message-thread">
+              {Object.entries(groupedMessages).map(([date, messages]) => (
+                <React.Fragment key={date}>
+                  <div className="message-date">{date}</div>
+                  
+                  {messages.map(message => (
+                    <div 
+                      key={message.id} 
+                      className={`message-item ${message.sender === 'manager' ? 'message-outgoing' : 'message-incoming'}`}
+                    >
+                      <div className="message-avatar">
+                        <img 
+                          src={message.sender === 'manager' ? '/images/creators/mark.jpg' : creator.profileImage} 
+                          alt={message.sender === 'manager' ? 'Mark' : creator.name} 
+                        />
+                      </div>
+                      <div className="message-content">
+                        <div className="message-header">
+                          <span className="message-sender">
+                            {message.sender === 'manager' ? 'You' : creator.name}
+                          </span>
+                          <span className="message-recipient">
+                            to {message.sender === 'manager' ? message.creatorEmail : message.managerEmail}
+                          </span>
+                        </div>
+                        <div className="message-body">
+                          {formatMessageContent(message.content, creator.name.split(' ')[0])
+                            .split('\n')
+                            .map((line, i) => (
+                              line.trim() === '' ? <br key={i} /> : <p key={i}>{line}</p>
+                            ))
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </React.Fragment>
+              ))}
             </div>
             
-            <div className="message-composer">
-              <div className="composer-input">
-                <p>Type a message...</p>
+            <div className="message-composer-wrapper">
+              <div className="message-composer-options">
+                <button className="composer-option">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M9 9H9.01" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M15 9H15.01" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+                <button className="composer-option">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M8.5 10C9.32843 10 10 9.32843 10 8.5C10 7.67157 9.32843 7 8.5 7C7.67157 7 7 7.67157 7 8.5C7 9.32843 7.67157 10 8.5 10Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M21 15L16 10L5 21" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+                <button className="composer-option">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 2V5" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M16 2V5" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M3 9H21" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span>Schedule</span>
+                </button>
+                
+                <div className="composer-send-options">
+                  <span>Send to</span>
+                  <div className="send-platform">
+                    <img src="/images/icons/Name=tik-tok.svg" alt="TikTok" width="16" height="16" />
+                    <span>Tik-Tok</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6 9L12 15L18 9" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                </div>
               </div>
-              <button className="composer-send">→</button>
+              
+              <div className="message-input-container">
+                <div className="message-input" contentEditable="true" data-placeholder={`Hi ${creator.name.split(' ')[0]},`}>Hi {creator.name.split(' ')[0]},</div>
+                <button className="send-button">
+                  <span>Send</span>
+                </button>
+              </div>
             </div>
           </div>
         );
@@ -789,8 +1005,11 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   };
 
   return (
-    <div className={`profile-drawer-overlay ${isOpen ? 'open' : ''}`}>
-      <div className={`profile-drawer-container ${isOpen ? 'open' : ''} ${drawerState === 'saved' && showSidebar ? 'with-sidebar' : ''}`}>
+    <div className={`profile-drawer-overlay ${isOpen ? 'open' : ''}`} onClick={handleClose}>
+      <div 
+        className={`profile-drawer-container ${isOpen ? 'open' : ''} ${drawerState === 'saved' && showSidebar ? 'with-sidebar' : ''}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Main drawer column */}
         <div className="profile-drawer-main-column">
           {/* Navigation controls */}
@@ -819,8 +1038,8 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
             {renderManageAccountButton()}
           </div>
           
-          {/* Main content */}
-          <div className="profile-drawer-content">
+          {/* Main content with ref for scroll detection */}
+          <div className="profile-drawer-content" ref={contentRef}>
             {/* Profile header */}
             {renderHeader()}
             

@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { creators, searchCreators } from '@/data/mockData';
+import { expandedCreators, searchExpandedCreators } from '@/data/mockData';
 import Sidebar from '@/components/Sidebar';
 import FilterSidebar from '@/components/FilterSidebar';
 import CreatorCard from '@/components/CreatorCard';
@@ -11,14 +11,14 @@ import { DownOutlined } from '@ant-design/icons';
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredCreators, setFilteredCreators] = useState(creators);
+  const [filteredCreators, setFilteredCreators] = useState(expandedCreators);
   const [_isCardsView, _setIsCardsView] = useState(true);
   const [_savedCreators, setSavedCreators] = useState<string[]>([]);
   const [_activeCreatorId, setActiveCreatorId] = useState<string | null>(null);
 
   useEffect(() => {
     // Update filtered creators when search query changes
-    const results = searchCreators(searchQuery);
+    const results = searchExpandedCreators(searchQuery);
     setFilteredCreators(results);
   }, [searchQuery]);
 
@@ -72,8 +72,9 @@ export default function Home() {
   // Labels for the filter sidebar
   const labels = [
     { key: 'shortlisted', name: 'Shortlisted' },
-    { key: 'norway2024', name: 'NORWAY 2024' },
-    { key: 'usebfragfree', name: 'US EB Frag Free' },
+    { key: 'Skate2025', name: 'Skate 2025' },
+    { key: 'high-view-health', name: 'high-view-health' },
+    { key: 'tech savvy', name: 'tech savvy' },
   ];
 
   return (
@@ -96,7 +97,7 @@ export default function Home() {
         {/* Results header */}
         <div className="results-header">
           <div className="results-count">
-            <span className="results-count-text">{filteredCreators.length},000+ Creators</span>
+            <span className="results-count-text">{filteredCreators.length} Creators</span>
             <div className="results-type">
               <span className="results-type-text">by Profiles</span>
               <DownOutlined className="results-type-icon" />
