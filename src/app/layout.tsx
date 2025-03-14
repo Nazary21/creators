@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+// Removing unused import
+// import { Inter } from "next/font/google";
 import "./globals.css";
 import { ConfigProvider } from 'antd';
 

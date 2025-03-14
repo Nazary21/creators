@@ -44,7 +44,7 @@ export default function ProfilePage() {
                 <Spin size="large" className="mb-4" />
                 <Title level={4}>Loading creator profile...</Title>
                 <Text type="secondary">
-                  If the profile doesn't load, the creator might not exist.
+                  If the profile doesn&apos;t load, the creator might not exist.
                 </Text>
               </div>
             )}

@@ -1,13 +1,14 @@
 import React from 'react';
-import { Typography, Button } from 'antd';
+import { Typography /* Button */ } from 'antd';
 import { 
   SearchOutlined, 
-  RightOutlined, 
+  // RightOutlined, // Unused import 
   PlusOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 
-const { Text } = Typography;
+// Comment out unused destructuring
+// const { Text } = Typography;
 
 interface FilterSidebarProps {
   labels: Array<{ key: string; name: string }>;

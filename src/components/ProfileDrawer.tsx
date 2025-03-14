@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  CheckCircleFilled, 
+  // CheckCircleFilled, // Unused import
   CloseOutlined, 
   UpOutlined,
   DownOutlined,
   MailOutlined,
   PhoneOutlined,
   EnvironmentOutlined,
-  InstagramOutlined,
+  // InstagramOutlined, // Unused import
   PlusOutlined,
   RightOutlined,
   SearchOutlined,
-  ExpandOutlined,
-  EllipsisOutlined
+  // ExpandOutlined, // Unused import
+  EllipsisOutlined,
+  CommentOutlined
 } from '@ant-design/icons';
 import { Creator } from '@/data/mockData';
-import Image from 'next/image';
+// import Image from 'next/image'; // Unused import
 
 interface ProfileDrawerProps {
   creator: Creator;
@@ -72,6 +73,11 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   const [showSidebar, setShowSidebar] = useState<boolean>(true);
   const [activeSocialTab, setActiveSocialTab] = useState<SocialTab>('all');
   
+  // Handle drawer close
+  const handleClose = () => {
+    onClose();
+  };
+  
   // Set the drawer state based on creator's saved status
   useEffect(() => {
     if (creator.isSaved) {
@@ -118,12 +124,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, onPrevious, onNext]);
-  
-  // Handle drawer close
-  const handleClose = () => {
-    onClose();
-  };
+  }, [isOpen, onPrevious, onNext, handleClose]);
   
   // Handle save to collection
   const handleSaveToCollection = () => {
@@ -235,7 +236,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
         
         <div className="contact-item">
           <div className="contact-label">
-            <img src="/images/icons/tag.png" alt="Tags" className="contact-icon" style={{ width: '16px', height: '16px' }} />
+            <img src="/images/icons/tag.svg" alt="Tags" className="contact-icon" style={{ width: '16px', height: '16px' }} />
             Tags
           </div>
           <div className="contact-tags">
@@ -269,19 +270,15 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
       <div className="data-table">
         <div className="attributes-table">
           <div className="attributes-table-header">
-            <div className="attributes-table-cell">Attribute</div>
-            <div className="attributes-table-cell">Type</div>
-            <div className="attributes-table-cell">Value</div>
+            <div className="attributes-table-cell">Attributes</div>
+            <div className="attributes-table-cell">Values</div>
           </div>
           
           <div className="attributes-table-row">
             <div className="attributes-table-cell attribute-label">
               <EnvironmentOutlined className="attribute-icon" />
               <span>Shipping address</span>
-            </div>
-            <div className="attributes-table-cell attribute-type">
-              <span className="type-icon">Aa</span>
-              <span className="type-text">String</span>
+              <span className="attribute-type">String</span>
             </div>
             <div className="attributes-table-cell attribute-value truncate">
               {creator.details.shippingAddress}
@@ -294,10 +291,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                 <path d="M16.5 13C14.76 13 13.09 13.81 12 15.09C10.91 13.81 9.24 13 7.5 13C4.42 13 2 15.41 2 18.5C2 21.58 4.42 24 7.5 24C9.24 24 10.91 23.19 12 21.91C13.09 23.19 14.76 24 16.5 24C19.58 24 22 21.58 22 18.5C22 15.41 19.58 13 16.5 13ZM7.5 22C5.5 22 4 20.5 4 18.5C4 16.5 5.5 15 7.5 15C9.5 15 11 16.5 11 18.5C11 20.5 9.5 22 7.5 22ZM16.5 22C14.5 22 13 20.5 13 18.5C13 16.5 14.5 15 16.5 15C18.5 15 20 16.5 20 18.5C20 20.5 18.5 22 16.5 22Z" fill="currentColor"/>
               </svg>
               <span>Total followers</span>
-            </div>
-            <div className="attributes-table-cell attribute-type">
-              <span className="type-icon">Σ</span>
-              <span className="type-text">Formula</span>
+              <span className="attribute-type">Formula</span>
             </div>
             <div className="attributes-table-cell attribute-value">
               {creator.details.totalFollowers}
@@ -310,10 +304,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                 <path d="M4 19H2C2 15.6863 4.68629 13 8 13H16C19.3137 13 22 15.6863 22 19H20C20 16.7909 18.2091 15 16 15H8C5.79086 15 4 16.7909 4 19ZM12 12C8.685 12 6 9.315 6 6C6 2.685 8.685 0 12 0C15.315 0 18 2.685 18 6C18 9.315 15.315 12 12 12ZM12 10C14.21 10 16 8.21 16 6C16 3.79 14.21 2 12 2C9.79 2 8 3.79 8 6C8 8.21 9.79 10 12 10Z" fill="currentColor"/>
               </svg>
               <span>Content Style</span>
-            </div>
-            <div className="attributes-table-cell attribute-type">
-              <span className="type-icon">[]</span>
-              <span className="type-text">Collection</span>
+              <span className="attribute-type">Collection</span>
             </div>
             <div className="attributes-table-cell attribute-value">
               <div className="attribute-tags">
@@ -326,14 +317,9 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
           
           <div className="attributes-table-row">
             <div className="attributes-table-cell attribute-label">
-              <svg className="attribute-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M13 9H18.5L13 3.5V9ZM6 2H14L20 8V20C20 21.1 19.1 22 18 22H6C4.9 22 4 21.1 4 20V4C4 2.9 4.9 2 6 2ZM15.68 15C15.68 13.37 14.33 12.04 12.69 12.04C11.05 12.04 9.7 13.37 9.7 15C9.7 16.63 11.05 17.96 12.69 17.96C14.33 17.96 15.68 16.63 15.68 15ZM8.34 15C8.34 12.61 10.29 10.69 12.69 10.69C15.09 10.69 17.04 12.61 17.04 15C17.04 17.39 15.09 19.31 12.69 19.31C10.29 19.31 8.34 17.39 8.34 15Z" fill="currentColor"/>
-              </svg>
+              <CommentOutlined className="attribute-icon" />
               <span>Languages Spoken</span>
-            </div>
-            <div className="attributes-table-cell attribute-type">
-              <span className="type-icon">[]</span>
-              <span className="type-text">Collection</span>
+              <span className="attribute-type">Collection</span>
             </div>
             <div className="attributes-table-cell attribute-value">
               <div className="attribute-tags">
@@ -762,7 +748,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                 </div>
                 <div className="message-body">
                   <p>Hi {creator.name.split(' ')[0]},</p>
-                  <p>I hope this message finds you well! We're reaching out about a potential collaboration opportunity with our brand.</p>
+                  <p>I hope this message finds you well! We&apos;re reaching out about a potential collaboration opportunity with our brand.</p>
                   <p>Would you be interested in learning more?</p>
                 </div>
               </div>
@@ -794,7 +780,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
       return (
         <button className="manage-account-button" onClick={toggleSidebar}>
           <img src="/images/icons/collapse-left.svg" alt="Collapse" />
-          <span>Manage account</span>
+          <span>Manage creator</span>
         </button>
       );
     }

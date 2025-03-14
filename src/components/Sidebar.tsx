@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 
 interface SidebarProps {
   activeKey?: string;
@@ -10,23 +9,19 @@ const Sidebar: React.FC<SidebarProps> = ({ activeKey = 'search' }) => {
   const menuItems = [
     { 
       key: 'search', 
-      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-1.svg', 
-      href: '/' 
+      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-1.svg'
     },
     { 
       key: 'messages', 
-      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-2.svg', 
-      href: '/messages' 
+      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-2.svg'
     },
     { 
       key: 'campaigns', 
-      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-3.svg', 
-      href: '/campaigns' 
+      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-3.svg'
     },
     { 
       key: 'communities', 
-      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-4.svg', 
-      href: '/communities' 
+      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-4.svg'
     },
   ];
 
@@ -34,14 +29,12 @@ const Sidebar: React.FC<SidebarProps> = ({ activeKey = 'search' }) => {
   const bottomItems = [
     { 
       key: 'settings', 
-      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-7.svg', 
-      href: '/settings' 
+      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-7.svg'
     },
     // You can add a second icon here if needed
     { 
       key: 'profile', 
-      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-5.svg', 
-      href: '/profile' 
+      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-5.svg'
     }
   ];
 
@@ -55,26 +48,24 @@ const Sidebar: React.FC<SidebarProps> = ({ activeKey = 'search' }) => {
         {/* Top menu items */}
         <div className="sidebar-menu">
           {menuItems.map(item => (
-            <Link 
+            <div 
               key={item.key} 
-              href={item.href}
               className={`sidebar-menu-item ${activeKey === item.key ? 'active' : ''}`}
             >
               <img src={item.icon} alt={item.key} />
-            </Link>
+            </div>
           ))}
         </div>
         
         {/* Bottom menu items */}
         <div className="sidebar-bottom-menu" style={{ marginTop: 'auto', marginBottom: '16px' }}>
           {bottomItems.map(item => (
-            <Link 
+            <div 
               key={item.key} 
-              href={item.href}
               className={`sidebar-menu-item ${activeKey === item.key ? 'active' : ''}`}
             >
               <img src={item.icon} alt={item.key} />
-            </Link>
+            </div>
           ))}
         </div>
       </div>

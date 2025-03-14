@@ -46,7 +46,7 @@ const CreatorProfile: React.FC<CreatorProfileProps> = ({ creator, messages = [] 
       title: 'Social Profiles',
       dataIndex: 'username',
       key: 'username',
-      render: (text: string, record: any) => (
+      render: (text: string, record: {platform: string; username: string; url: string}) => (
         <Space>
           {record.platform === 'instagram' ? <InstagramOutlined /> : 
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: 8 }}>
@@ -406,15 +406,15 @@ const CreatorProfile: React.FC<CreatorProfileProps> = ({ creator, messages = [] 
                             <div className="text-xs text-gray-500 mb-1">You <span className="text-gray-400">to {creator.email}</span></div>
                             <div className="p-3 bg-gray-50 rounded-lg">
                               <p>Hi {creator.name.split(' ')[0]},</p>
-                              <p>I hope this message finds you well! I'm reaching out one more time about our collaboration opportunity at [Brand Name].</p>
-                              <p>We're big fans of your work and believe your audience would love our [product/service]. This partnership would include:</p>
+                              <p>I hope this message finds you well! I&apos;m reaching out one more time about our collaboration opportunity at [Brand Name].</p>
+                              <p>We&apos;re big fans of your work and believe your audience would love our [product/service]. This partnership would include:</p>
                               <ul className="list-disc pl-5">
                                 <li>[Compensation detail]</li>
                                 <li>[Product detail]</li>
                                 <li>[Creative freedom detail]</li>
                                 <li>[Timeline detail]</li>
                               </ul>
-                              <p>We need to finalize our creator roster by [date]. If we don't hear back, we'll assume the timing isn't right, but we'd love to keep you in mind for future opportunities.</p>
+                              <p>We need to finalize our creator roster by [date]. If we don&apos;t hear back, we&apos;ll assume the timing isn&apos;t right, but we&apos;d love to keep you in mind for future opportunities.</p>
                               <p>All the best,<br />Mark</p>
                             </div>
                           </div>
@@ -430,7 +430,7 @@ const CreatorProfile: React.FC<CreatorProfileProps> = ({ creator, messages = [] 
                             <div className="text-xs text-gray-500 mb-1">You <span className="text-gray-400">to Instagram DM</span></div>
                             <div className="p-3 bg-gray-50 rounded-lg">
                               <p>Hi {creator.name.split(' ')[0]},</p>
-                              <p>I'm [Your Name] from [Brand Name]. We love your content and would like to discuss a potential collaboration.</p>
+                              <p>I&apos;m [Your Name] from [Brand Name]. We love your content and would like to discuss a potential collaboration.</p>
                             </div>
                           </div>
                         </div>
@@ -439,7 +439,7 @@ const CreatorProfile: React.FC<CreatorProfileProps> = ({ creator, messages = [] 
                       <div className="relative">
                         <div className="p-3 border border-gray-200 rounded-lg">
                           <p>Hi {creator.name.split(' ')[0]},</p>
-                          <p>We're looking for creators like you to help showcase our...</p>
+                          <p>We&apos;re looking for creators like you to help showcase our...</p>
                         </div>
                         <Button 
                           type="primary" 

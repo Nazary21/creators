@@ -3,7 +3,7 @@
 import React from 'react';
 import { useParams } from 'next/navigation';
 import { Button, Typography, Tabs, Spin, Badge, Statistic, Space, Tag, Avatar } from 'antd';
-import { ArrowLeftOutlined, CheckCircleFilled, MessageOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, CheckCircleFilled, CommentOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { creators, messages } from '@/data/mockData';
 import Sidebar from '@/components/Sidebar';
@@ -95,7 +95,7 @@ export default function ProfileCRMPage() {
                                 <Button 
                                   type="primary" 
                                   shape="circle" 
-                                  icon={<MessageOutlined />} 
+                                  icon={<CommentOutlined />} 
                                   className="absolute bottom-3 right-3"
                                 />
                               </div>
@@ -127,7 +127,7 @@ export default function ProfileCRMPage() {
                 <Spin size="large" className="mb-4" />
                 <Title level={4}>Loading creator profile...</Title>
                 <Text type="secondary">
-                  If the profile doesn't load, the creator might not exist.
+                  If the profile doesn&apos;t load, the creator might not exist.
                 </Text>
               </div>
             )}

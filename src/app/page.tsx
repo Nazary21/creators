@@ -11,9 +11,9 @@ import { DownOutlined } from '@ant-design/icons';
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredCreators, setFilteredCreators] = useState(creators);
-  const [isCardsView, setIsCardsView] = useState(true);
-  const [savedCreators, setSavedCreators] = useState<string[]>([]);
-  const [activeCreatorId, setActiveCreatorId] = useState<string | null>(null);
+  const [_isCardsView, _setIsCardsView] = useState(true);
+  const [_savedCreators, setSavedCreators] = useState<string[]>([]);
+  const [_activeCreatorId, setActiveCreatorId] = useState<string | null>(null);
 
   useEffect(() => {
     // Update filtered creators when search query changes
