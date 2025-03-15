@@ -2,11 +2,21 @@
 
 ## Overview
 
-The Archive design system is built with a focus on consistency, scalability, and usability. It provides a unified approach to styling across the application, ensuring visual coherence and developer efficiency. This document outlines our design tokens, component patterns, and implementation guidelines.
+This design system is built with a focus on consistency, scalability, and usability. It provides a unified approach to styling across the application, ensuring visual coherence and developer efficiency. This document outlines our design tokens, component patterns, and implementation guidelines.
 
 ## Design Tokens
 
 Design tokens are the foundational visual elements that define our design system. They represent the smallest visual attributes and are used to maintain consistency across the application.
+
+## Coverage Analysis
+1.  Card components | ~95% | Most cards now using --surface-default, --card-border, etc. |
+2.  Button styles | ~90% | Primary/secondary/tertiary buttons fully tokenized |
+3.  Text colors | ~95% | Almost all text now using --text-primary, --text-secondary, etc. |
+4.  Backgrounds | ~85% | Most backgrounds using --surface-default, --surface-light |
+5.  Borders | ~85% | Mostly using --gray-200, --card-border |
+6.  Scrollbars | ~90% | Updated to use --gray-300, --gray-400 |
+7.  Profile drawer | ~95% | Fully refactored to use design tokens |
+8.  Social components | ~90% | Tables and tabs using design tokens |
 
 ### Color System
 
