@@ -533,13 +533,13 @@ a {
   height: 32px;
   padding: 0 12px;
   border-radius: 4px;
-  border: 1px solid var(--gray-300);
+  border: none;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .view-options-container:hover {
-  border-color: var(--gray-400);
+  border-color: transparent;
 }
 
 .view-option-text {
