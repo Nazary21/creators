@@ -244,7 +244,7 @@ const CreatorProfile: React.FC<CreatorProfileProps> = ({ creator, messages = [] 
               {messages.map((message) => (
                 <Card key={message.id} className="mb-4">
                   <div className="flex items-start">
-                    <Avatar size="small" className="mr-3">U</Avatar>
+                    <Avatar size="small" className="mr-3" src="/images/creators/ronald.jpg">U</Avatar>
                     <div>
                       <div className="flex items-center mb-1">
                         <Text strong>You</Text>
@@ -402,7 +402,7 @@ const CreatorProfile: React.FC<CreatorProfileProps> = ({ creator, messages = [] 
                       
                       <div className="mb-6">
                         <div className="flex items-start mb-2">
-                          <Avatar size="small" className="mr-2">U</Avatar>
+                          <Avatar size="small" className="mr-2" src="/images/creators/ronald.jpg">U</Avatar>
                           <div>
                             <div className="text-xs text-gray-500 mb-1">You <span className="text-gray-400">to {creator.email}</span></div>
                             <div className="p-3 bg-gray-50 rounded-lg">
@@ -426,7 +426,7 @@ const CreatorProfile: React.FC<CreatorProfileProps> = ({ creator, messages = [] 
                       
                       <div className="mb-6">
                         <div className="flex items-start mb-2">
-                          <Avatar size="small" className="mr-2">U</Avatar>
+                          <Avatar size="small" className="mr-2" src="/images/creators/ronald.jpg">U</Avatar>
                           <div>
                             <div className="text-xs text-gray-500 mb-1">You <span className="text-gray-400">to Instagram DM</span></div>
                             <div className="p-3 bg-gray-50 rounded-lg">

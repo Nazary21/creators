@@ -903,7 +903,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                     >
                       <div className="message-avatar">
                         <img 
-                          src={message.sender === 'manager' ? '/images/creators/mark.jpg' : creator.profileImage} 
+                          src={message.sender === 'manager' ? '/images/creators/ronald.jpg' : creator.profileImage} 
                           alt={message.sender === 'manager' ? 'Mark' : creator.name} 
                         />
                       </div>
