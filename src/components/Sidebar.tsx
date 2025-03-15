@@ -19,19 +19,23 @@ const Sidebar: React.FC<SidebarProps> = ({ activeKey = 'search' }) => {
       key: 'campaigns', 
       icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-3.svg'
     },
-    { 
-      key: 'communities', 
-      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-4.svg'
-    },
+    // Removed navigation/rocket icon and moved to bottomItems
   ];
 
   // Bottom menu items
   const bottomItems = [
     { 
+      key: 'communities', 
+      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-4.svg'
+    },
+    { 
+      key: 'calendar', 
+      icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-6.svg'
+    },
+    { 
       key: 'settings', 
       icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-7.svg'
     },
-    // You can add a second icon here if needed
     { 
       key: 'profile', 
       icon: '/images/icons/aa_menu_global/_Menu/Menu Item/Vertical/aa_navigation_icons-5.svg'
@@ -44,7 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeKey = 'search' }) => {
         <div className="sidebar-logo-icon">W</div>
       </div>
       
-      <div className="sidebar-content">
+      <div className="sidebar-content" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 60px)' }}>
         {/* Top menu items */}
         <div className="sidebar-menu">
           {menuItems.map(item => (
